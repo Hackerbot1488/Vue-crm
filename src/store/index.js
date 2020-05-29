@@ -12,9 +12,25 @@ export default new Vuex.Store({
   },
   actions: {
     async fetchCurrency () {
-      const key = process.env.VUE_APP_FIXER
-      const res = await fetch(`http://data.fixer.io/api/latest?access_key=${key}&symbols=USD,EUR,RUB`)
-      return await res.json()
+      // const key = process.env.VUE_APP_FIXER
+      const key = process.env.VUE_APP_VALUTE
+      const res = await fetch(`https://v6.exchangerate-api.com/v6/${key}/latest/USD`).then(response => response.json())
+      console.log(res)
+      var date = new Date().toLocaleDateString()
+      const numbers = date.split('.')
+      date = ''
+      for (var i = numbers.length - 1; i >= 0; i--) {
+        if (i === 0) {
+          date += numbers[i]
+        } else {
+          date += numbers[i] + '-'
+        }
+      }
+      return {
+        date,
+        rates: res.conversion_rates
+      }
+      // return res
     }
   },
   mutations: {
